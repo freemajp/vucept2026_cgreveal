@@ -13,6 +13,7 @@
   --bg:#1c1814;--bg2:#252019;
   --off-white:#F5F2EC;--border:rgba(207,178,106,0.32);
   --cell:min(300px,36vw);
+  --cg-color:rgba(207,178,106,0.7);
 }
 html,body{width:100%;height:100%;min-height:100vh;background:var(--bg);color:var(--off-white);font-family:'Source Sans 3',sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 35%,rgba(207,178,106,0.07) 0%,transparent 70%);pointer-events:none;z-index:0;}
@@ -104,13 +105,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 .corner-arrow{width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;transition:transform 0.25s ease;}
 .corner-arrow svg{width:20px;height:20px;stroke:var(--gold);stroke-width:2;fill:none;opacity:0.55;transition:opacity 0.3s,stroke 0.3s;}
-.corner-glow{position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(207,178,106,0.28) 0%,transparent 70%);opacity:0;transition:opacity 0.3s ease;}
+.corner-glow{position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,var(--glow-color, var(--cg-color)) 0%,transparent 70%);opacity:0;transition:opacity 0.3s ease;}
 
 .corner-text{font-family:'Source Sans 3',sans-serif;font-size:clamp(16px,1.9vw,21px);font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:rgba(245,242,236,0.75);max-width:160px;line-height:1.45;transition:opacity 0.3s,color 0.3s;}
 .corner.tr .corner-text,.corner.br .corner-text{text-align:right;}
 .corner.tl .corner-text,.corner.bl .corner-text{text-align:left;}
 
-.corner:hover .corner-arrow svg{opacity:1;stroke:var(--gold-light);}
+.corner:hover .corner-arrow svg{opacity:1;stroke:var(--cg-color);}
 .corner:hover .corner-glow{opacity:1;}
 .corner:hover .corner-text{opacity:1;color:#ffffff;}
 @keyframes cornerBounce{0%{transform:scale(1)}30%{transform:scale(1.22)}60%{transform:scale(1.08)}100%{transform:scale(1.12)}}
@@ -199,10 +200,85 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   100%{transform:scale(1);}
 }
 .corner-pulse{animation:cornerReveal 0.65s cubic-bezier(0.34,1.56,0.64,1) both;}
+
+.game-inner{
+  display:flex;flex-direction:column;align-items:center;
+  width:100%;max-width:900px;
+  margin:0 auto;
+}
+.fs-btn{
+  position:fixed;bottom:20px;right:20px;
+  background:transparent;border:1px solid rgba(207,178,106,0.35);
+  color:rgba(207,178,106,0.5);
+  font-family:'Source Sans 3',sans-serif;font-size:11px;
+  letter-spacing:0.18em;text-transform:uppercase;
+  padding:9px 16px;cursor:pointer;z-index:100;
+  transition:border-color 0.2s,color 0.2s,opacity 0.6s;
+  display:flex;align-items:center;gap:8px;
+  opacity:1;
+}
+.fs-btn:hover{border-color:var(--gold);color:var(--gold);}
+.fs-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+
+@keyframes mysteryGlow{
+  0%,100%{text-shadow:none;color:rgba(207,178,106,0.1);}
+  50%{text-shadow:0 0 18px var(--mg-color,rgba(207,178,106,0.9)),0 0 42px var(--mg-color,rgba(207,178,106,0.4));color:var(--mg-color,rgba(207,178,106,0.85));}
+}
+.reel-outer.cg-glow .mystery-inner::before{
+  animation:mysteryGlow 2s ease-in-out infinite;
+}
+.corner-selected .corner-arrow svg{opacity:1;stroke:var(--cg-color);}
+.corner-selected .corner-glow{opacity:1;animation:cornerGlowPulse 1.8s ease-in-out infinite;}
+.corner-selected .corner-text{opacity:1;color:#ffffff;}
+@keyframes cornerGlowPulse{
+  0%,100%{opacity:0.7;}
+  50%{opacity:1;}
+}
+.corner-selected .corner-arrow{transform:scale(1.12);}
+.corner-selected .corner-arrow{transform:scale(1.18);}
+.corner{pointer-events:none;}
+.corner.unlocked{pointer-events:auto;}
+@keyframes cornerFlash{
+  0%{opacity:0;transform:scale(0.7);}
+  30%{opacity:1;transform:scale(1.18);}
+  55%{transform:scale(1.0);}
+  100%{transform:scale(1.0);opacity:1;}
+}
+/* Slow fade-out transitions only active while flash class is present or just removed */
+.corner-color-flash .corner-arrow svg,
+.corner-color-flash-out .corner-arrow svg{
+  transition:stroke 1.5s ease, filter 1.5s ease, opacity 0.3s ease;
+}
+.corner-color-flash .corner-glow,
+.corner-color-flash-out .corner-glow{
+  transition:opacity 1.5s ease, background 1.5s ease;
+}
+.corner-color-flash .corner-text,
+.corner-color-flash-out .corner-text{
+  transition:color 1.5s ease, opacity 0.3s ease;
+}
+/* Flash class sets the peak values — removal smoothly transitions back via base rules */
+.corner-color-flash .corner-arrow svg{
+  stroke:var(--flash-color, var(--gold));
+  opacity:1;
+  filter:drop-shadow(0 0 8px var(--flash-color, var(--gold)));
+}
+.corner-color-flash .corner-glow{
+  opacity:0.85;
+}
+.corner-color-flash .corner-text{
+  opacity:1;
+  color:rgba(255,248,220,0.95);
+}
 </style>
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
+<canvas id="spotlight-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:50;width:100vw;height:100vh;"></canvas>
+<button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">
+  <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+  <span id="fsBtnLabel">Full screen</span>
+</button>
 <div class="stage">
 
   <!-- WELCOME -->
@@ -220,11 +296,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <!-- GAME -->
   <div id="game-screen">
     <!-- corners -->
-    <div class="corner tl" id="corner-tl"><div class="corner-arrow"><div class="corner-glow"></div><svg viewBox="0 0 24 24"><line x1="20" y1="20" x2="4" y2="4"/><polyline points="4,12 4,4 12,4"/></svg></div><div class="corner-text" id="ctxt-tl"></div></div>
-    <div class="corner tr" id="corner-tr"><div class="corner-arrow"><div class="corner-glow"></div><svg viewBox="0 0 24 24"><line x1="4" y1="20" x2="20" y2="4"/><polyline points="12,4 20,4 20,12"/></svg></div><div class="corner-text" id="ctxt-tr"></div></div>
-    <div class="corner bl" id="corner-bl"><div class="corner-arrow"><div class="corner-glow"></div><svg viewBox="0 0 24 24"><line x1="20" y1="4" x2="4" y2="20"/><polyline points="4,12 4,20 12,20"/></svg></div><div class="corner-text" id="ctxt-bl"></div></div>
-    <div class="corner br" id="corner-br"><div class="corner-arrow"><div class="corner-glow"></div><svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20"/><polyline points="20,12 20,20 12,20"/></svg></div><div class="corner-text" id="ctxt-br"></div></div>
+    <div class="corner tl" id="corner-tl" onclick="selectCorner('tl')"><div class="corner-arrow"><div class="corner-glow"></div><svg viewBox="0 0 24 24"><line x1="20" y1="20" x2="4" y2="4"/><polyline points="4,12 4,4 12,4"/></svg></div><div class="corner-text" id="ctxt-tl"></div></div>
+    <div class="corner tr" id="corner-tr" onclick="selectCorner('tr')"><div class="corner-arrow"><div class="corner-glow"></div><svg viewBox="0 0 24 24"><line x1="4" y1="20" x2="20" y2="4"/><polyline points="12,4 20,4 20,12"/></svg></div><div class="corner-text" id="ctxt-tr"></div></div>
+    <div class="corner bl" id="corner-bl" onclick="selectCorner('bl')"><div class="corner-arrow"><div class="corner-glow"></div><svg viewBox="0 0 24 24"><line x1="20" y1="4" x2="4" y2="20"/><polyline points="4,12 4,20 12,20"/></svg></div><div class="corner-text" id="ctxt-bl"></div></div>
+    <div class="corner br" id="corner-br" onclick="selectCorner('br')"><div class="corner-arrow"><div class="corner-glow"></div><svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20"/><polyline points="20,12 20,20 12,20"/></svg></div><div class="corner-text" id="ctxt-br"></div></div>
 
+    <div class="game-inner">
     <div class="top-bar">
       <span class="title-small">VUcept 4 Corners</span>
       <span class="counter" id="counter">0 / 10</span>
@@ -269,6 +346,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="btn-base" id="spinBtn" onclick="spinAll()" disabled><span>Spin</span></button>
       <button class="reset-btn" onclick="resetGame()"><span>Reset</span></button>
     </div>
+
+    </div><!-- /game-inner -->
   </div>
 
   <!-- FINAL -->
@@ -328,6 +407,18 @@ const ALL_SYMBOLS = [
    Replace placeholders. corners = [topLeft, topRight, bottomLeft, bottomRight]
    readers = [leftBoxName, rightBoxName]
 ── */
+const CG_COLORS = [
+  "rgba(255, 220, 50, 0.85)",   /* 1  Yellow  — Jerald & Adora */
+  "rgba(30, 20, 10, 0.85)",     /* 2  Black   — Madden & Isabella */
+  "rgba(220, 50, 50, 0.85)",    /* 3  Red     — Eldaah & Jacy */
+  "rgba(60, 130, 255, 0.85)",   /* 4  Blue    — Brinnan & Lindsay */
+  "rgba(160, 80, 220, 0.85)",   /* 5  Purple  — Sabrina & Devin */
+  "rgba(255, 140, 30, 0.85)",   /* 6  Orange  — Katie & Caroline */
+  "rgba(50, 200, 100, 0.85)",   /* 7  Green   — Brodie & Ava */
+  "rgba(180, 180, 180, 0.75)",  /* 8  Grey    — Chloe & Shyla */
+  "rgba(240, 240, 255, 0.85)",  /* 9  White   — Alaina & Krishna */
+  "rgba(255, 120, 180, 0.85)",  /* 10 Pink    — Emma Grace & Corey */
+];
 const ROUNDS = [
   {
     question: "Go-to dining hall strategy?",
@@ -418,9 +509,22 @@ class SymRing {
 function showScreen(id){
   ['welcome-screen','game-screen','final-screen'].forEach(s=>document.getElementById(s).style.display='none');
   document.getElementById(id).style.display='flex';
+  const fb=document.getElementById('fsBtn');
+  if(fb){
+    if(id==='welcome-screen'){
+      setTimeout(()=>{
+        fb.style.opacity='1';
+        fb.style.pointerEvents='auto';
+      }, 600);
+    } else {
+      fb.style.opacity='0';
+      fb.style.pointerEvents='none';
+    }
+  }
 }
 
 function startGame(){
+  const fb=document.getElementById('fsBtn');if(fb){fb.style.opacity='0';fb.style.pointerEvents='none';}
   initState();
   showScreen('game-screen');
   setTimeout(()=>{
@@ -468,7 +572,7 @@ function setButtonState(state){
     nb.disabled=true; sb.disabled=true;
     _spinUnlockTimer=setTimeout(()=>{
       sb.disabled=false; sb.classList.add('glow');
-    }, 7000);
+    }, 7400);
   }
   else{nb.disabled=true;sb.disabled=true;}
   // label: spin 10 already done shows nothing relevant; before spin 10 done:
@@ -484,36 +588,65 @@ function showCorners(round){
   ['tl','tr','bl','br'].forEach((pos,i)=>{
     document.getElementById('ctxt-'+pos).textContent=round.corners[i];
     const el=document.getElementById('corner-'+pos);
-    el.classList.remove('visible','corner-pulse');
+    el.classList.remove('visible','corner-pulse','unlocked','corner-color-flash');
   });
   const revealOrder = ['tl','tr','br','bl'];
   revealOrder.forEach((pos, i) => {
     setTimeout(() => {
       const el=document.getElementById('corner-'+pos);
       el.classList.add('visible','corner-pulse');
+      // Flash in standard gold on reveal (CG color glow fires separately on ?)
+      el.style.setProperty('--flash-color', 'rgba(207,178,106,0.92)');
+      el.style.setProperty('--glow-color', 'rgba(207,178,106,0.92)');
+      el.classList.add('corner-color-flash');
+      // Unlock for clicking
+      el.classList.add('unlocked');
       setTimeout(()=>el.classList.remove('corner-pulse'), 700);
-      // After last corner (i===3), italicise question
+      setTimeout(()=>{
+        el.classList.remove('corner-color-flash');
+        el.classList.add('corner-color-flash-out');
+        setTimeout(()=>{
+          el.classList.remove('corner-color-flash-out');
+          el.style.removeProperty('--glow-color');
+        }, 1600);
+      }, 2400);
+      // After last corner
       if(i===3){
+        setTimeout(()=>{ applyCGGlow(spinCount); }, 80);
         setTimeout(()=>{
           const q=document.getElementById('questionText');
           if(q) q.style.fontStyle='italic';
-        }, 700);
+        }, 600);
       }
     }, 5000 + i * 600);
   });
 }
-function hideCorners(){['tl','tr','bl','br'].forEach(pos=>document.getElementById('corner-'+pos).classList.remove('visible'));}
 
-/* ── PRESS NEXT / FINISH ── */
+function hideCorners(){
+  ['tl','tr','bl','br'].forEach(pos=>{
+    const el=document.getElementById('corner-'+pos);
+    el.classList.remove('visible','unlocked','corner-color-flash');
+  });
+}
 function pressNext(){
   const nb=document.getElementById('nextBtn');
   if(nb&&nb.disabled)return;
+  _selectedCorner=null; updateCornerSelection(); hideSpotlight();
   // If this is after spin 10 — go to final screen
-  if(spinCount===TOTAL_SPINS){showScreen('final-screen');return;}
+  if(spinCount===TOTAL_SPINS){
+    clearCGGlow();
+    hideCorners();
+    ['name0','name1'].forEach(id=>{const e=document.getElementById(id);e.textContent='';e.classList.remove('show');});
+    document.getElementById('questionText').classList.remove('visible');
+    document.getElementById('phraseText').classList.remove('visible');
+    setTimeout(()=>showScreen('final-screen'), 200);
+    return;
+  }
 
   // fade out phrase + corners
   document.getElementById('phraseText').classList.remove('visible');
   document.getElementById('phraseText').innerHTML='';
+  clearCGGlow();
   hideCorners();
 
   // hide names
@@ -526,11 +659,10 @@ function pressNext(){
   qEl.classList.remove('visible');
   qEl.textContent='Q' + (spinCount + 1) + ': ' + round.question;
 
-  // show reader names
+  // show reader names — always ensure Board on left
   setTimeout(()=>{
     const n0=document.getElementById('name0');
     const n1=document.getElementById('name1');
-    // Always ensure Board is on the left slot
     let r0=round.readers[0], r1=round.readers[1];
     if(r1.toUpperCase().startsWith('BOARD') && !r0.toUpperCase().startsWith('BOARD')){
       [r0,r1]=[r1,r0];
@@ -545,7 +677,7 @@ function pressNext(){
     showCorners(round);
   },100);
 
-  // reset reels
+  // reset reels to mystery
   setTimeout(()=>{
     const ro=document.getElementById('reel0');if(ro)CELL_H=ro.offsetWidth;
     buildMysteryTrack(document.getElementById('track0'));
@@ -555,6 +687,9 @@ function pressNext(){
   ['letterA','letterB'].forEach(id=>{const e=document.getElementById(id);e.textContent='';e.classList.remove('show');});
   ['label0','label1'].forEach(id=>{const e=document.getElementById(id);e.textContent='';e.classList.remove('show');});
   ['reel0','reel1'].forEach(id=>document.getElementById(id).classList.remove('flash'));
+
+  // reset cookie caption
+  const cc=document.getElementById('cookie-caption');if(cc){cc.style.opacity='0';cc.textContent='';}
 
   nextPressed=true;
   setButtonState('spin-ready');
@@ -596,10 +731,35 @@ function pickTargets(){
 }
 
 /* ── SPIN ── */
+
+function applyCGGlow(roundIdx){
+  const color = CG_COLORS[roundIdx] || CG_COLORS[0];
+  window._currentCGColor = color;
+  document.documentElement.style.setProperty('--cg-color', color);
+  ['reel0','reel1'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.style.setProperty('--mg-color', color);
+      el.classList.add('cg-glow');
+    }
+  });
+}
+function clearCGGlow(){
+  window._currentCGColor = null;
+  document.documentElement.style.setProperty('--cg-color','rgba(207,178,106,0.7)');
+  ['reel0','reel1'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.classList.remove('cg-glow'); el.style.removeProperty('--mg-color'); }
+  });
+}
 function spinAll(){
   if(isSpinning||!nextPressed)return;
   const sb=document.getElementById('spinBtn');
   if(sb&&sb.disabled)return;
+  // Capture CG color BEFORE clearing so confetti uses it
+  const _confettiColor = window._currentCGColor || null;
+  clearCGGlow();
+  _selectedCorner=null; updateCornerSelection(); hideSpotlight();
   isSpinning=true;nextPressed=false;
   setButtonState('spinning');
 
@@ -608,7 +768,7 @@ function spinAll(){
   hideCorners();
   ['name0','name1'].forEach(id=>document.getElementById(id).classList.remove('show'));
 
-  launchConfetti();
+  launchConfetti(_confettiColor);
 
   const isCookieSpin=spinCount===TOTAL_SPINS-1;
   const[t0sym,t1sym]=pickTargets();
@@ -729,13 +889,28 @@ let particles=[],cRAF=null;
 function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 window.addEventListener('resize',resizeCanvas);resizeCanvas();
 const COLORS=['#CFB26A','#E8D49A','#F5F2EC','#d4a843','#fff0b3','#b8942a','#ffd97a'];
-function launchConfetti(){
+function launchConfetti(cgColorOverride){
   const w=canvas.width,h=canvas.height,count=130;
+  const palette = buildConfettiPalette(cgColorOverride || 'rgba(207,178,106,0.85)');
   for(let i=0;i<count;i++){
     const left=i<count/2;
-    particles.push({x:left?Math.random()*90:w-Math.random()*90,y:h+8,vx:(left?1:-1)*(2+Math.random()*4),vy:-(6.5+Math.random()*9),rot:Math.random()*Math.PI*2,rotV:(Math.random()-0.5)*0.2,w:6+Math.random()*8,h:3+Math.random()*5,color:COLORS[Math.floor(Math.random()*COLORS.length)],alpha:1,gravity:0.2+Math.random()*0.12});
+    particles.push({x:left?Math.random()*90:w-Math.random()*90,y:h+8,vx:(left?1:-1)*(2+Math.random()*4),vy:-(6.5+Math.random()*9),rot:Math.random()*Math.PI*2,rotV:(Math.random()-0.5)*0.2,w:6+Math.random()*8,h:3+Math.random()*5,color:palette[Math.floor(Math.random()*palette.length)],alpha:1,gravity:0.2+Math.random()*0.12});
   }
   if(cRAF)cancelAnimationFrame(cRAF);tickConfetti();
+}
+
+function buildConfettiPalette(cgColor){
+  const m = cgColor.match(/[\d.]+/g);
+  if(!m||m.length<3) return COLORS;
+  const r=parseFloat(m[0]),g=parseFloat(m[1]),b=parseFloat(m[2]);
+  // Full opacity vivid base, lighter tint, darker shade
+  const base  = `rgba(${r},${g},${b},1)`;
+  const light = `rgba(${Math.min(255,r+70)},${Math.min(255,g+70)},${Math.min(255,b+70)},1)`;
+  const dim   = `rgba(${Math.max(0,r-50)},${Math.max(0,g-50)},${Math.max(0,b-50)},1)`;
+  const white = '#F5F2EC';
+  const gold  = '#CFB26A';
+  // 70% CG variants, 30% neutrals
+  return [base,base,base,light,light,dim,dim,base,white,gold];
 }
 function tickConfetti(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -758,6 +933,157 @@ function formatReader(str) {
   const tenure = str.slice(0, colonIdx).trim();
   const name = str.slice(colonIdx + 1).trim();
   return '<span style="font-size:0.72em;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,242,236,0.55);margin-right:6px;">' + tenure + '</span><span style="color:rgba(245,242,236,0.95);font-size:1em;">' + name + '</span>';
+}
+
+function toggleFullscreen(){
+  const btn=document.getElementById('fsBtn');
+  const lbl=document.getElementById('fsBtnLabel');
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().then(()=>{
+      lbl.textContent='Exit full screen';
+    }).catch(()=>{});
+  } else {
+    document.exitFullscreen().then(()=>{
+      lbl.textContent='Full screen';
+    }).catch(()=>{});
+  }
+}
+document.addEventListener('fullscreenchange',()=>{
+  const lbl=document.getElementById('fsBtnLabel');
+  if(lbl) lbl.textContent=document.fullscreenElement?'Exit full screen':'Full screen';
+});
+
+let _selectedCorner = null;
+
+function selectCorner(pos){
+  const el = document.getElementById('corner-'+pos);
+  if(!el || !el.classList.contains('unlocked')) return;
+  if(_selectedCorner === pos){
+    _selectedCorner = null;
+    updateCornerSelection();
+    hideSpotlight();
+    return;
+  }
+  _selectedCorner = pos;
+  updateCornerSelection();
+  showSpotlight(pos);
+}
+
+function updateCornerSelection(){
+  ['tl','tr','br','bl'].forEach(pos=>{
+    const el = document.getElementById('corner-'+pos);
+    if(!el) return;
+    if(pos === _selectedCorner){
+      el.classList.add('corner-selected');
+    } else {
+      el.classList.remove('corner-selected');
+    }
+  });
+}
+
+// Click on open space deselects
+document.addEventListener('click', function(e){
+  if(_selectedCorner && !e.target.closest('.corner')){
+    _selectedCorner = null;
+    updateCornerSelection();
+    hideSpotlight();
+  }
+});
+
+const slCanvas = document.getElementById('spotlight-canvas');
+const slCtx = slCanvas.getContext('2d');
+let _spotlightRAF = null;
+let _spotlightAlpha = 0;
+let _spotlightTarget = 0;
+let _spotlightPos = {x:0, y:0};
+let _spotlightFastFade = false;
+
+function resizeSpotlight(){
+  slCanvas.width=window.innerWidth;
+  slCanvas.height=window.innerHeight;
+}
+window.addEventListener('resize', resizeSpotlight);
+resizeSpotlight();
+
+function getCornerPos(pos){
+  const el = document.getElementById('corner-'+pos);
+  if(!el) return null;
+  const r = el.getBoundingClientRect();
+  return {
+    x: pos.includes('r') ? r.right - 20 : r.left + 20,
+    y: pos.includes('b') ? r.bottom - 20 : r.top + 20,
+  };
+}
+
+function drawSpotlight(){
+  _spotlightRAF = null;
+  // Ease toward target first
+  const _easeRate = _spotlightFastFade ? 0.22 : 0.09;
+  _spotlightAlpha += (_spotlightTarget - _spotlightAlpha) * _easeRate;
+  slCtx.clearRect(0,0,slCanvas.width,slCanvas.height);
+  if(_spotlightAlpha > 0.004){
+    const {x,y} = _spotlightPos;
+    const radius = Math.max(slCanvas.width, slCanvas.height) * 0.72;
+    const grad = slCtx.createRadialGradient(x,y,0, x,y,radius);
+    grad.addColorStop(0,    `rgba(255,248,210,${Math.min(0.38,_spotlightAlpha*0.38).toFixed(3)})`);
+    grad.addColorStop(0.08, `rgba(255,240,180,${Math.min(0.28,_spotlightAlpha*0.28).toFixed(3)})`);
+    grad.addColorStop(0.25, `rgba(255,225,140,${Math.min(0.14,_spotlightAlpha*0.14).toFixed(3)})`);
+    grad.addColorStop(0.55, `rgba(255,210,100,${Math.min(0.05,_spotlightAlpha*0.05).toFixed(3)})`);
+    grad.addColorStop(1,    'rgba(0,0,0,0)');
+    slCtx.fillStyle = grad;
+    slCtx.fillRect(0,0,slCanvas.width,slCanvas.height);
+  }
+  // Keep looping if not settled
+  const diff = Math.abs(_spotlightTarget - _spotlightAlpha);
+  if(diff > 0.003 || _spotlightAlpha > 0.004){
+    _spotlightRAF = requestAnimationFrame(drawSpotlight);
+  } else {
+    _spotlightAlpha = _spotlightTarget;
+    slCtx.clearRect(0,0,slCanvas.width,slCanvas.height);
+    // If we just finished fading out for a swap — now fade in at new pos
+    if(_spotlightFastFade && _pendingSpotlightPos && _spotlightAlpha < 0.01){
+      _spotlightPos = _pendingSpotlightPos;
+      _pendingSpotlightPos = null;
+      _spotlightTarget = 1;
+      _spotlightFastFade = false;
+      _spotlightRAF = requestAnimationFrame(drawSpotlight);
+    }
+  }
+}
+
+let _pendingSpotlightPos = null;
+
+function showSpotlight(pos){
+  const p = getCornerPos(pos);
+  if(!p) return;
+
+  // If already visible, do quick fade-out then fade-in at new pos
+  if(_spotlightAlpha > 0.04){
+    _pendingSpotlightPos = p;
+    _spotlightTarget = 0;
+    _spotlightFastFade = true;  // use faster ease for the out phase
+    if(_spotlightRAF) cancelAnimationFrame(_spotlightRAF);
+    _spotlightRAF = null;
+    drawSpotlight();
+  } else {
+    // Not currently visible — just fade straight in
+    _pendingSpotlightPos = null;
+    _spotlightPos = p;
+    _spotlightTarget = 1;
+    _spotlightFastFade = false;
+    if(_spotlightRAF) cancelAnimationFrame(_spotlightRAF);
+    _spotlightRAF = null;
+    drawSpotlight();
+  }
+}
+
+function hideSpotlight(){
+  _pendingSpotlightPos = null;
+  _spotlightTarget = 0;
+  _spotlightFastFade = false;
+  if(_spotlightRAF) cancelAnimationFrame(_spotlightRAF);
+  _spotlightRAF = null;
+  drawSpotlight();
 }
 </script>
 </body>
