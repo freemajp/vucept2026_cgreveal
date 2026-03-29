@@ -108,7 +108,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .corner-glow{position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,var(--glow-color, var(--cg-color)) 0%,transparent 70%);opacity:0;transition:opacity 0.3s ease;}
 
 /* Prev size: clamp(16px,1.9vw,21px); */
-.corner-text{font-family:'Source Sans 3',sans-serif;font-size:clamp(20px,2.4vw,26px);font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:rgba(245,242,236,0.75);max-width:190px;line-height:1.45;transition:opacity 0.3s,color 0.3s;}
+.corner-text{font-family:'Source Sans 3',sans-serif;font-size:clamp(20px,2.4vw,26px);font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:rgba(245,242,236,0.75);max-width:230px;line-height:1.45;transition:opacity 0.3s,color 0.3s;}
 .corner.tr .corner-text,.corner.br .corner-text{text-align:right;}
 .corner.tl .corner-text,.corner.bl .corner-text{text-align:left;}
 
@@ -891,7 +891,7 @@ function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.inne
 window.addEventListener('resize',resizeCanvas);resizeCanvas();
 const COLORS=['#CFB26A','#E8D49A','#F5F2EC','#d4a843','#fff0b3','#b8942a','#ffd97a'];
 function launchConfetti(cgColorOverride){
-  const w=canvas.width,h=canvas.height,count=180; /* Changed count from 130 -> 180 */
+  const w=canvas.width,h=canvas.height,count=250; /* Changed count from 180 -> 250 */
   const palette = buildConfettiPalette(cgColorOverride || 'rgba(207,178,106,0.85)');
   for(let i=0;i<count;i++){
     const left=i<count/2;
@@ -918,7 +918,7 @@ function tickConfetti(){
   particles=particles.filter(p=>p.alpha>0.03&&p.y<canvas.height+40);
   for(const p of particles){
     p.x+=p.vx;p.y+=p.vy;p.vy+=p.gravity;p.vx*=0.996;p.rot+=p.rotV;
-    if(p.y>canvas.height*0.35)p.alpha-=0.013; /* Changed p.alpha from 0.013 -> 0.007 */
+    if(p.y>canvas.height*0.35)p.alpha-=0.007; /* Changed p.alpha from 0.013 -> 0.007 */
     ctx.save();ctx.globalAlpha=Math.max(0,p.alpha);ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
   }
   if(particles.length)cRAF=requestAnimationFrame(tickConfetti);
