@@ -107,7 +107,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .corner-arrow svg{width:20px;height:20px;stroke:var(--gold);stroke-width:2;fill:none;opacity:0.55;transition:opacity 0.3s,stroke 0.3s;}
 .corner-glow{position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,var(--glow-color, var(--cg-color)) 0%,transparent 70%);opacity:0;transition:opacity 0.3s ease;}
 
-.corner-text{font-family:'Source Sans 3',sans-serif;font-size:clamp(16px,1.9vw,21px);font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:rgba(245,242,236,0.75);max-width:160px;line-height:1.45;transition:opacity 0.3s,color 0.3s;}
+/* Prev size: clamp(16px,1.9vw,21px); */
+.corner-text{font-family:'Source Sans 3',sans-serif;font-size:clamp(20px,2.4vw,26px);font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:rgba(245,242,236,0.75);max-width:160px;line-height:1.45;transition:opacity 0.3s,color 0.3s;}
 .corner.tr .corner-text,.corner.br .corner-text{text-align:right;}
 .corner.tl .corner-text,.corner.bl .corner-text{text-align:left;}
 
@@ -382,10 +383,10 @@ const IMG_zeppos_slot='data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUN
 
 /* ── SYMBOLS ── */
 const ALL_SYMBOLS = [
-  { id:'anchor',     letter:'A', label:'Commodore Anchor',      phraseHTML:'Remember your <b>anchor</b>',        img:IMG_anchor_slot },
+  { id:'anchor',     letter:'A', label:'Anchor Down',      phraseHTML:'Remember your <b>anchor</b>',        img:IMG_anchor_slot },
   { id:'bridge',     letter:'B', label:'Commons Bridge',        phraseHTML:'<b>Bridge</b> through differences',    img:IMG_bridge_slot },
   { id:'coffee',     letter:'C', label:"Suzie's Coffee",      phraseHTML:'Seek new <b>connections</b>',         img:IMG_coffee_slot },
-  { id:'book',       letter:'D', label:'Textbooks',             phraseHTML:'<b>Discover</b> your path',    img:IMG_book_slot },
+  { id:'book',       letter:'D', label:'A Peabody Book',             phraseHTML:'<b>Discover</b> your path',    img:IMG_book_slot },
   { id:'leaf',       letter:'E', label:'Vanderbilt Oak Leaf',  phraseHTML:'Stay <b>evergreen</b>, keep growing',               img:IMG_leaf_slot },
   { id:'guitar',     letter:'G', label:'Music City Guitar',    phraseHTML:'You bring the <b>groove</b>',         img:IMG_guitar_slot },
   { id:'people',     letter:'H', label:'Community Hands',      phraseHTML:'Lead with <b>heart</b>',           img:IMG_people_slot },
@@ -397,10 +398,10 @@ const ALL_SYMBOLS = [
   { id:'helmet',     letter:'P', label:'Commodores Football',  phraseHTML:'Drive with <b class="glow-word">purpose</b>',      img:IMG_helmet_slot },
   { id:'hand',       letter:'R', label:'VU Sign',              phraseHTML:'Know your <b>roots</b>',           img:IMG_hand_slot },
   { id:'boot',       letter:'T', label:'Cowboy Boots',         phraseHTML:'True to <b>Tennessee</b>',            img:IMG_boot_slot },
-  { id:'sun',        letter:'U', label:'Southern Sun',         phraseHTML:'<b>Uplift</b> others',         img:IMG_sun_slot },
+  { id:'sun',        letter:'U', label:'The Sun',         phraseHTML:'<b>Uplift</b> others',         img:IMG_sun_slot },
   { id:'wyatt',      letter:'W', label:'Wyatt Center',         phraseHTML:'<b>Welcome</b> new experiences',      img:IMG_wyatt_slot },
-  { id:'squirrel',   letter:'Y', label:'Campus Friends',       phraseHTML:'Here all <b>year</b>',           img:IMG_squirrel_slot },
-  { id:'cookie',     letter:'\u2423', label:'Rand Cookie',          phraseHTML:'Ate, left no <b>crumbs</b>', img:IMG_cookie_slot },
+  { id:'squirrel',   letter:'Y', label:'Our Campus Friends',       phraseHTML:'Here all <b>year</b>',           img:IMG_squirrel_slot },
+  { id:'cookie',     letter:'\u2423', label:'OG Rand Cookie',          phraseHTML:'Ate, left no <b>crumbs</b>', img:IMG_cookie_slot },
 ];
 
 /* ── ROUNDS
@@ -467,7 +468,7 @@ const ROUNDS = [
   },
   {
     question: "Who has the best cookies on campus?",
-    corners: ["Rand (OG)", "EBI", "Carmichael", "Suzie's"],
+    corners: ["Rand (New)", "EBI", "Carmichael", "Suzie's"],
     readers: ["Board: Emma Grace", "Lifer: Corey"]
   },
 ];
