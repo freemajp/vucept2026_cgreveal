@@ -93,7 +93,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .phrase-text{color:var(--gold-light);font-style:italic;opacity:0;transform:translateY(4px);}
 .phrase-text.visible{opacity:1;transform:translateY(0);}
 /* bold span inside phrase */
-.phrase-text b{font-weight:700;font-style:normal;color:var(--gold-light);text-shadow:0 0 8px rgba(207,178,106,0.7),0 0 20px rgba(207,178,106,0.35);}
+.phrase-text b{font-weight:700;font-style:normal;color:var(--gold-light);text-shadow:0 0 8px rgba(207,178,106,0.7),0 0 24px rgba(207,178,106,0.35);}
 
 /* 4 CORNERS */
 .corner{position:absolute;display:flex;align-items:flex-start;gap:7px;opacity:0;transition:opacity 0.5s ease;cursor:pointer;padding:8px;user-select:none;}
@@ -108,7 +108,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .corner-glow{position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,var(--glow-color, var(--cg-color)) 0%,transparent 70%);opacity:0;transition:opacity 0.3s ease;}
 
 /* Prev size: clamp(16px,1.9vw,21px); */
-.corner-text{font-family:'Source Sans 3',sans-serif;font-size:clamp(20px,2.4vw,26px);font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:rgba(245,242,236,0.75);max-width:230px;line-height:1.45;transition:opacity 0.3s,color 0.3s;}
+.corner-text{font-family:'Source Sans 3',sans-serif;font-size:clamp(22px,2.5vw,28px);font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:rgba(245,242,236,0.75);max-width:230px;line-height:1.45;transition:opacity 0.3s,color 0.3s;}
 .corner.tr .corner-text,.corner.br .corner-text{text-align:right;}
 .corner.tl .corner-text,.corner.bl .corner-text{text-align:left;}
 
@@ -409,16 +409,16 @@ const ALL_SYMBOLS = [
    readers = [leftBoxName, rightBoxName]
 ── */
 const CG_COLORS = [
-  "rgba(255, 220, 50, 0.85)",   /* 1  Yellow  — Jerald & Adora */
-  "rgba(30, 20, 10, 0.85)",     /* 2  Black   — Madden & Isabella */
-  "rgba(220, 50, 50, 0.85)",    /* 3  Red     — Eldaah & Jacy */
-  "rgba(60, 130, 255, 0.85)",   /* 4  Blue    — Brinnan & Lindsay */
-  "rgba(160, 80, 220, 0.85)",   /* 5  Purple  — Sabrina & Devin */
-  "rgba(255, 140, 30, 0.85)",   /* 6  Orange  — Katie & Caroline */
-  "rgba(50, 200, 100, 0.85)",   /* 7  Green   — Brodie & Ava */
-  "rgba(180, 180, 180, 0.75)",  /* 8  Grey    — Chloe & Shyla */
-  "rgba(240, 240, 255, 0.85)",  /* 9  White   — Alaina & Krishna */
-  "rgba(255, 120, 180, 0.85)",  /* 10 Pink    — Emma Grace & Corey */
+  "rgba(196, 154, 108, 0.85)",   /* 1  Brown — Jerald & Adora */
+  "rgba(180, 180, 180 0.85)",     /* 2  Grey — Madden & Isabella */
+  "rgba(30, 20, 10, 0.85)",    /* 3  Black — Eldaah & Jacy */
+  "rgba(255, 220, 50, 0.85)",   /* 4  Yellow — Brinnan & Lindsay */
+  "rgba(255, 120, 180, 0.85)",   /* 5  Pink — Sabrina & Devin */
+  "rgba(240, 240, 255, 0.85)",   /* 6  White — Katie & Caroline */
+  "rgba(50, 200, 100, 0.85)",   /* 7  Green — Brodie & Ava */
+  "rgba(160, 80, 220, 0.75)",  /* 8  Purple — Chloe & Shyla */
+  "rgba(60, 130, 255, 0.85)",  /* 9  Blue — Alaina & Krishna */
+  "rgba(220, 50, 50, 0.85)",  /* 10 Red — Emma Grace & Corey */
 ];
 const ROUNDS = [
   {
@@ -452,8 +452,8 @@ const ROUNDS = [
     readers: ["Board: Katie", "Lifer: Caroline"]
   },
   {
-    question: "First thought when you see a banana?",
-    corners: ["I'm John Wick", "Make a phone call", "Probably eat it", "Mario Kart potential"],
+    question: "What do you do when you drop food on the floor?",
+    corners: ["Five second rule ofc", "Depends on who's watching", "Pick it up and act like nothing happened", "It was gone once it left my plate"],
     readers: ["Board: Brodie", "FTR: Ava"]
   },
   {
